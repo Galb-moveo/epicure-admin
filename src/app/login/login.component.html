@@ -1,0 +1,8 @@
+<form [formGroup]="loginModal">
+    <h1>Login</h1>
+    <label for="">Email</label>
+    <input type="text" formControlName="email">
+    <label for="">Password</label>
+    <input type="text" formControlName="password">
+    <button type="submit" (click)="login()"> Submit</button>
+</form>

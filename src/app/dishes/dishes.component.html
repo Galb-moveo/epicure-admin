@@ -1,0 +1,152 @@
+<div class="dish__top">
+  <h1 class="dish__title">Dishes</h1>
+  <button mat-button color="primary" (click)="openAddDish()">
+    <i class="material-icons">add</i>Add Item
+  </button>
+</div>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="image">
+    <th mat-header-cell *matHeaderCellDef>Image</th>
+    <td mat-cell *matCellDef="let element">
+      <img class="dish__image" [src]="element.image" alt="" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Description</th>
+    <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef>Price</th>
+    <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <th mat-header-cell *matHeaderCellDef>Edit</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="openEditDish(element.id)">
+        <i class="material-icons">edit</i>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef>Delete</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="deleteDish(element.id)">
+        <i class="material-icons">delete_outline</i>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<div *ngIf="isAddDishOpen">
+  <app-add-modal
+    [(isAddChefOpen)]="isAddDishOpen"
+    (isAddDishOpenChange)="isAddDishOpen = $event"
+  >
+    <form class="modal__form" [formGroup]="dishModal">
+      <h1 class="modal__title">{{ title }}</h1>
+      <label class="modal__lable">Name</label>
+      <input type="text" formControlName="name" placeholder="Enter Name" />
+      <label class="modal__lable">Image</label>
+      <input
+        class="modal__input"
+        type="text"
+        id="image"
+        formControlName="image"
+      />
+      <label>Description</label>
+      <textarea
+        name="description"
+        formControlName="description"
+        placeholder="Enter description"
+      ></textarea>
+
+      <label class="modal__lable">Restaurant</label>
+      <select name="chefs" name="selectedChef" formControlName="restaurantId">
+        <option *ngFor="let rest of restaurants" [value]="rest.id">
+          {{ rest.name }}
+        </option>
+      </select>
+      <label class="modal__lable">Price</label>
+      <input class="modal__input" type="number" formControlName="price" />
+      <label for="">Tags</label>
+<!-- 
+      <div *ngFor="let tag of tagsArray">
+        <label for="tag"  formControlName="tags"> {{tag.name}}</label><br />
+      <input
+        type="checkbox"
+        name="tag"
+        
+        (change)="onChange()"
+      />
+      </div> -->
+      <form [formGroup]="tags">
+        <label   >spicy</label>
+        <input
+          type="checkbox"
+          name="spicy"
+          formControlName="isSpicy"
+        />
+        <label>veg</label>
+        <input
+          type="checkbox"
+          name="vagen"
+          formControlName="isVegan"
+        />
+        <label > vej</label>
+        <input
+          type="checkbox"
+          name="vej"
+          formControlName="isVej"
+        />
+</form>
+      <button (click)="addDish()">Submit</button>
+    </form>
+  </app-add-modal>
+</div>
+<div *ngIf="isEditDishOpen">
+  <app-add-modal
+    [(isAddChefOpen)]="isEditDishOpen"
+    (isEditDishOpenChange)="isEditDishOpen = $event"
+  >
+    <form class="modal__form" [formGroup]="dishModal">
+      <h1 class="modal__title">Edit Dish</h1>
+      <label class="modal__lable">Name</label>
+      <input type="text" formControlName="name" placeholder="Enter Name" />
+      <label class="modal__lable">Image</label>
+      <input
+        class="modal__input"
+        type="text"
+        id="image"
+        formControlName="image"
+      />
+      <label>Description</label>
+      <textarea
+        name="description"
+        formControlName="description"
+        placeholder="Enter description"
+      ></textarea>
+
+      <label class="modal__lable">Restaurant</label>
+      <select name="chefs" name="selectedChef" formControlName="restaurantId">
+        <option *ngFor="let rest of restaurants" [value]="rest.id">
+          {{ rest.name }}
+        </option>
+      </select>
+      <label class="modal__lable">Price</label>
+      <input class="modal__input" type="number" formControlName="price" />
+      <label for="">Tags</label>
+      <button (click)="editDish()">Submit</button>
+    </form>
+  </app-add-modal>
+</div>

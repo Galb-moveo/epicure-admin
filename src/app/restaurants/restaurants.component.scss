@@ -1,0 +1,59 @@
+table {
+    width: 100%;
+  }
+//   .full-width-table {
+//     width: 100%;
+//   }
+  
+  .restaurant__title{
+    text-align: center;
+    align-items: center;
+    margin: 0;
+    padding: 16px;
+  }
+  .restaurant__image{
+    display: flex;
+    height: 70px;
+    width: 70px;
+    align-self: center;
+  }
+  
+//   .mat-cell {
+//     padding: 5px 5px 5px 0;
+//   }
+.restaurant__title{
+  text-align: center;
+  align-items: center;
+  margin: 0;
+  padding: 16px;
+}
+
+.restaurant__top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 80px 0px 20px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.input__radio{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.modal__lable{
+margin: 10px 0;
+}
+
+.modal__title{
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #000;
+  margin: 10px 0 0;
+  align-items: center;
+}

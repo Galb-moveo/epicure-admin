@@ -1,0 +1,10 @@
+<form [formGroup]="registerModal">
+    <h1>Register</h1>
+    <label for="">Email</label>
+    <input type="text" formControlName="email">
+    <label for="">Password</label>
+    <input type="text" formControlName="password">
+    <label for="">Name</label>
+    <input type="text" formControlName="name">
+    <button type="submit" (click)="register()"> Submit</button>
+</form>

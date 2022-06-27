@@ -1,0 +1,123 @@
+  <div class="chef__top">
+    <h1 class="chef__title">Chefs</h1>
+    <button mat-button color="primary" (click)="openAddChef()"><i class="material-icons">add</i>Add Item</button>
+  </div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="image">
+    <th mat-header-cell *matHeaderCellDef>Image</th>
+    <td mat-cell *matCellDef="let element">
+      <img class="chef__image" [src]="element.image" alt="" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Description</th>
+    <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="active">
+    <th mat-header-cell *matHeaderCellDef>Active</th>
+    <td mat-cell *matCellDef="let element">{{ element.isActive }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <th mat-header-cell *matHeaderCellDef>Edit</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="openEditChef(element.id)"><i class="material-icons">edit</i></button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef>Delete</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="deleteChef(element.id)"><i class="material-icons">delete_outline</i></button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<div *ngIf="isAddChefOpen">
+    <app-add-modal [(isAddChefOpen)]="isAddChefOpen" (isAddChefOpenChange)="isAddChefOpen=$event"> 
+      
+      <form class="modal__form">
+        <h1>{{ title }}</h1>
+        <label>Name</label>
+        <input type="text" name="name" [(ngModel)]="name">
+
+        <label>Description</label>
+        <textarea name="description" [(ngModel)]="description"></textarea>
+
+        <label>Image</label>
+        <input type="text" name="image" [(ngModel)]="image">
+        <!-- <label class="modal__lable">Active</label>
+        <div class="input__radio">
+          <input
+            class="modal__input"
+            type="radio"
+            name="popular"
+            value="true"
+            name="active"
+            [(ngModel)]="isActive"
+          />
+          <label class="modal__lable"> Yes</label>
+          <input
+            class="modal__input"
+            type="radio"
+            name="popular"
+            value="false"
+            name="popular"
+            [(ngModel)]="isActive"
+          />
+          <label class="modal__lable"> No</label>
+        </div> -->
+        <button (click)="addChef()">Submit</button>
+      </form>
+    
+    </app-add-modal>
+  </div>
+  <div *ngIf="isEditChefOpen">
+    <app-add-modal [(isEditChefOpen)]="isEditChefOpen" (isEditChefOpenChange)="isEditChefOpen=$event"> 
+      
+      <form class="modal__form" >
+        <h1>Edit Chef</h1>
+        <label>Name</label>
+        <input type="text" name="name" [(ngModel)]="name">
+
+        <label>Description</label>
+        <textarea name="description" [(ngModel)]="description"></textarea>
+
+        <label>Image</label>
+        <input type="text" name="image" [(ngModel)]="image">
+        <label class="modal__lable">Active</label>
+        <div class="input__radio">
+          <input
+            class="modal__input"
+            type="radio"
+            name="popular"
+            value="true"
+            name="active"
+            [(ngModel)]="isActive"
+          />
+          <label class="modal__lable"> Yes</label>
+          <input
+            class="modal__input"
+            type="radio"
+            name="popular"
+            value="false"
+            name="popular"
+            [(ngModel)]="isActive"
+          />
+          <label class="modal__lable"> No</label>
+        </div>
+        <button (click)="editChef()">Submit</button>
+      </form>
+    
+    </app-add-modal>

@@ -1,0 +1,30 @@
+  table {
+    width: 100%;
+  }
+  
+  .chef__image{
+    display: flex;
+    height: 70px;
+    width: 70px;
+    align-self: center;
+  }
+
+  .chef__title{
+    text-align: center;
+    align-items: center;
+    margin: 0;
+    padding: 16px;
+  }
+
+  .chef__top{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 80px 0px 20px;
+  }
+  
+  .modal__form{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
