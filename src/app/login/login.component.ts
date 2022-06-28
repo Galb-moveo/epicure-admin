@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private apiService: ApiService,
-    private toastService: HotToastService
+    private toastService: HotToastService,
   ) {}
 
   ngOnInit(): void {}
@@ -45,12 +45,11 @@ export class LoginComponent implements OnInit {
           console.log(response);
           this.loginModal.reset();
           this.router.navigate(['/chefs']);
-          this.toastService.success('You have successfully logged in!')
+          this.toastService.success('You have successfully logged in!');
         },
         (error) => {
-          // console.error('email or password are not correct');
           this.loginModal.reset();
-          this.toastService.error('Email or password are incorrect')
+          this.toastService.error('Email or password are incorrect');
           this.errorMessage = error;
         },
       );
@@ -68,10 +67,10 @@ export class LoginComponent implements OnInit {
           console.log(res);
           this.registerModal.reset();
           this.router.navigate(['/login']);
-          this.toastService.success('You have successfully registered!')
+          this.toastService.success('You have successfully registered!');
         },
         (error) => {
-          this.toastService.error('Please enter a valid fields')
+          this.toastService.error('Please enter a valid fields');
           this.registerModal.reset();
           this.errorMessage = error;
         },
