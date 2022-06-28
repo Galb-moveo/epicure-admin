@@ -17,7 +17,8 @@ export interface restaurantBodyReq {
   styleUrls: ['./restaurants.component.scss'],
 })
 export class RestaurantsComponent implements OnInit {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {    
+  }
   restaurantModal = new FormGroup({
     name: new FormControl(),
     image: new FormControl(),
@@ -38,6 +39,7 @@ export class RestaurantsComponent implements OnInit {
   isEditRestaurantOpen: boolean = false;
   chefsArray: any = [];
   chefs: any = [];
+  token:any = localStorage.getItem('token')
 
   displayedColumns: string[] = [
     'name',

@@ -5,20 +5,20 @@ import { RestaurantsComponent } from './restaurants/restaurants.component';
 import { ChefsComponent } from './chefs/chefs.component';
 import { ChefOfWeekComponent } from './chef-of-week/chef-of-week.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { AuthenticationGuard } from './authentication.guard';
 
 const routes: Routes = [
+  {path:'login', component:  LoginComponent},
   {
-    path: '',
+    path: '' ,component:NavigationComponent,canActivate:[AuthenticationGuard],
     children: [
-      { path: 'chefs', component:  ChefsComponent},
-      { path: 'restaurants', component:  RestaurantsComponent},
-      { path: 'dishes', component: DishesComponent },
-      { path: 'chefOfWeek', component:  ChefOfWeekComponent},
+      { path: 'chefs', component:  ChefsComponent, canActivate:[AuthenticationGuard]},
+      { path: 'restaurants', component:  RestaurantsComponent, canActivate:[AuthenticationGuard]},
+      { path: 'dishes', component: DishesComponent, canActivate:[AuthenticationGuard]},
+      { path: 'chefOfWeek', component:  ChefOfWeekComponent, canActivate:[AuthenticationGuard]},
     ],
   },
-  {path:'login', component:  LoginComponent},
-  {path:'register', component:  RegisterComponent},
 ];
 
 @NgModule({

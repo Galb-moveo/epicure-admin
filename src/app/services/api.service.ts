@@ -15,7 +15,12 @@ export class ApiService {
 
   //////Restaurant requests
   getRestaurants() {
-    return this.http.get(`${this.BASE_URL}/restaurants`);
+    return this.http.get(`${this.BASE_URL}/restaurants`,{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
   }
 
   addRestaurants(
@@ -53,7 +58,12 @@ export class ApiService {
   
   //////Dish requests
   getDishes() {
-    return this.http.get(`${this.BASE_URL}/dishes`);
+    return this.http.get(`${this.BASE_URL}/dishes`,{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
   }
   addDish(
     name: string,
@@ -95,7 +105,12 @@ export class ApiService {
   //////Chef requests
 
   getChefs() {
-    return this.http.get(`${this.BASE_URL}/chefs`);
+    return this.http.get(`${this.BASE_URL}/chefs`,{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
   }
 
   addChef(name: string, image: string, description: string, isActive: boolean) {
@@ -125,7 +140,12 @@ export class ApiService {
 
   /////chefOFWek
   getChefOfWeek(){
-    return this.http.get(`${this.BASE_URL}/chefOfWeek`);
+    return this.http.get(`${this.BASE_URL}/chefOfWeek`,{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
   }
 
   editChefOfWeek(chefId: string, body:any ) {
@@ -139,13 +159,14 @@ export class ApiService {
     return this.http.post(`${this.AUTH_URL}/signin`,{
       email: email,
       password: password
-    });
-  }
+    })
+  } 
+  
   register(email:string,password:string, name:string){
     return this.http.post(`${this.AUTH_URL}/signup`,{
       email: email,
       password: password,
       name:name
-    });
+    })
   }
 }

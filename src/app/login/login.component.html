@@ -1,8 +1,23 @@
-<form [formGroup]="loginModal">
-    <h1>Login</h1>
-    <label for="">Email</label>
-    <input type="text" formControlName="email">
-    <label for="">Password</label>
-    <input type="text" formControlName="password">
-    <button type="submit" (click)="login()"> Submit</button>
-</form>
+<body>
+	<div class="main">  	
+		<input type="checkbox" id="chk" aria-hidden="true">
+			<div class="signup">
+				<form [formGroup]="registerModal">
+					<label for="chk" aria-hidden="true">Sign up</label>
+					<input type="text" name="txt" placeholder="User name" required formControlName="regName">
+					<input type="email" name="email" placeholder="Email" required formControlName="regEmail">
+					<input type="password" name="pswd" placeholder="Password" required formControlName="regPassword">
+					<button (click)="register()" aria-hidden="true">Sign up</button>
+				</form>
+			</div>
+
+			<div class="login" >
+				<form [formGroup]="loginModal">
+					<label for="chk" aria-hidden="true">Login</label>
+					<input type="email" name="email" placeholder="Email" required formControlName="email">
+					<input type="password" name="pswd" placeholder="Password" required formControlName="password">
+					<button (click)="submitForm()">Login</button>
+				</form>
+			</div>
+	</div>
+</body>
