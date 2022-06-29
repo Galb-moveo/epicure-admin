@@ -23,9 +23,10 @@
       </button>
       <span>epicure admin</span>
       <div>
-      <button mat-raised-button color="primary" routerLink="/login">Login</button>
-      <button mat-raised-button color="primary" routerLink="/register">Register</button>
-    </div>
+      <button mat-stroked-button>Hello {{email}} <i class="material-icons" (click)="logout()">logout</i></button>
+      <!-- <button mat-raised-button color="primary" (click)="logout()" >Logout</button> -->
+      
+  </div>
     </mat-toolbar>
     <!-- <app-dashboard></app-dashboard> -->
     <router-outlet></router-outlet>

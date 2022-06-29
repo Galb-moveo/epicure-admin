@@ -20,7 +20,7 @@ export class ChefsComponent implements OnInit {
   name: string = '';
   description: string = '';
   image: string = '';
-  isActive: boolean = false;
+  isActive: boolean = true;
   constructor(public apiService: ApiService) {}
 
   displayedColumns: string[] = [

@@ -29,7 +29,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChefOfWeekComponent } from './chef-of-week/chef-of-week.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { HotToastModule } from '@ngneat/hot-toast';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,6 @@ import { RegisterComponent } from './register/register.component';
     AddModalComponent,
     ChefOfWeekComponent,
     LoginComponent,
-    RegisterComponent,
   ],
   imports: [
     HttpClientModule,
@@ -64,7 +63,8 @@ import { RegisterComponent } from './register/register.component';
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HotToastModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
