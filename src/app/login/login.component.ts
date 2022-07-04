@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       .login(this.loginModal.value.email, this.loginModal.value.password)
       .subscribe(
         (response) => {
-          console.log(response);
+          // console.log(response);
           this.loginModal.reset();
           this.router.navigate(['/chefs']);
           this.toastService.success('You have successfully logged in!');
@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          console.log(res);
+          // console.log(res);
           this.registerModal.reset();
           this.router.navigate(['/login']);
           this.toastService.success('You have successfully registered!');

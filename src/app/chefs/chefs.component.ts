@@ -17,6 +17,7 @@ export class ChefsComponent implements OnInit {
   title = 'Add Chef';
   isAddChefOpen: boolean = false;
   isEditChefOpen: boolean = false;
+  isDeleteChefOpen: boolean = false;
   name: string = '';
   description: string = '';
   image: string = '';
@@ -24,12 +25,11 @@ export class ChefsComponent implements OnInit {
   constructor(public apiService: ApiService) {}
 
   displayedColumns: string[] = [
-    'name',
     'image',
+    'name',
     'description',
     'edit',
     'delete',
-    'active',
   ];
   dataSource: any = [];
   chefsArray: any = [];
@@ -53,20 +53,28 @@ export class ChefsComponent implements OnInit {
   }
   openAddChef() {
     this.isAddChefOpen = !this.isAddChefOpen;
+    this.name = '';
+    this.image = '';
+    this.description = '';
+  }
+  openDeleteChef(id: string) {
+    this.isDeleteChefOpen = !this.isDeleteChefOpen;
+    this.selectedChef = id;
   }
 
-  openEditChef(id: any) {
+  openEditChef(row: any) {
     this.isEditChefOpen = !this.isEditChefOpen;
-    this.selectedChef = id;
+    this.name = row.name;
+    this.image = row.image;
+    this.description = row.description;
+    this.selectedChef = row.id;
   }
 
   addChef() {
     this.apiService
       .addChef(this.name, this.image, this.description, this.isActive)
-      .subscribe((res) => {
-        console.log(res);
-      });
-      this.isAddChefOpen = false;
+      .subscribe((res) => {});
+    this.isAddChefOpen = false;
   }
 
   editChef() {
@@ -76,15 +84,11 @@ export class ChefsComponent implements OnInit {
       description: this.description,
       isActive: this.isActive,
     };
-    this.apiService.editChef(this.selectedChef, body).subscribe((res) => {
-      console.log(res);
-    });
+    this.apiService.editChef(this.selectedChef, body).subscribe((res) => {});
     this.isEditChefOpen = false;
   }
 
-  deleteChef(id:string) {
-    this.apiService.deleteChef(id, false).subscribe((res) => {
-      console.log(res);
-    });
+  deleteChef() {
+    this.apiService.deleteChef(this.selectedChef, false).subscribe((res) => {});
   }
 }

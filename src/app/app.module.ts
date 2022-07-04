@@ -31,6 +31,7 @@ import { ChefOfWeekComponent } from './chef-of-week/chef-of-week.component';
 import { LoginComponent } from './login/login.component';
 import { HotToastModule } from '@ngneat/hot-toast';
 
+
 @NgModule({
   declarations: [
     AppComponent,

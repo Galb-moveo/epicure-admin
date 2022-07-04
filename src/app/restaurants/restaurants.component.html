@@ -4,11 +4,14 @@
     <i class="material-icons">add</i>Add Item
   </button>
 </div>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+<div class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" >
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let element">{{ element.name }}</td>
   </ng-container>
+
 
   <ng-container matColumnDef="image">
     <h1 class="chef__title">Restaurants</h1>
@@ -36,20 +39,27 @@
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef>Edit</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="openEditRestaurant(element.id)"><i class="material-icons">edit</i></button>
+      <button mat-button (click)="openEditRestaurant(element)"><i class="material-icons">edit</i></button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef>Delete</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="deleteRestaurant(element.id)"><i class="material-icons">delete_outline</i></button>
+      <button mat-button (click)="openDeleteRestaurant(element.id)"><i class="material-icons">delete_outline</i></button>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+
+<!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+showFirstLastButtons 
+aria-label="Select page of periodic elements">
+</mat-paginator> -->
+</div>
+
 <div *ngIf="isAddRestaurantOpen">
   <app-add-modal
     [(isAddChefOpen)]="isAddRestaurantOpen"
@@ -65,11 +75,11 @@
         <input type="text" name="image" formControlName="image">
         <!-- <input type="text" name="image" [(ngModel)]="image" formControlName="image"> -->
       <label class="modal__lable">Chef</label>
-      <select name="chefs" name="selectedChef"  formControlName="chefId">
+      <select name="chefs" name="selectedChef"  formControlName="chef">
         <option *ngFor="let chef of chefs" [value]="chef.id">{{chef.name}}</option>
       </select>
-      <label class="modal__lable">SignatureDish</label>
-      <select name="dish" name="SignatureDish"  formControlName="signatureId">
+      <label class="modal__lable">signatureDish</label>
+      <select name="dish" name="signatureDish"  formControlName="signatureDish">
         <option *ngFor="let dish of dishes" [value]="dish.id">{{dish.name}}</option>
       </select>
       <label class="modal__lable">Popular</label>
@@ -78,7 +88,7 @@
           class="modal__input"
           type="radio"
           value="true"
-          formControlName="isPopular"
+          formControlName="popular"
           [value]="true"
         />
         <label class="modal__lable"> Yes</label>
@@ -86,7 +96,7 @@
           class="modal__input"
           type="radio"
           value="false"
-          formControlName="isPopular"
+          formControlName="popular"
           [value]="false"
         />
         <label class="modal__lable"> No</label>
@@ -111,12 +121,12 @@
       <input type="text" name="image" formControlName="image">
       <!-- <input type="text" name="image" [(ngModel)]="image" formControlName="image"> -->
     <label class="modal__lable">Chef</label>
-    <select name="chefs" name="selectedChef"  formControlName="chefId">
-      <option *ngFor="let chef of chefs" [value]="chef.id">{{chef.name}}</option>
+    <select name="chefs" name="selectedChef"  formControlName="chef">
+      <option *ngFor="let chef of chefs" [value]="restaurantModal.value.chef">{{chef.name}}</option>
     </select>
-    <label class="modal__lable">SignatureDish</label>
-    <select name="dish" name="SignatureDish"  formControlName="signatureId">
-      <option *ngFor="let dish of dishes" [value]="dish.id">{{dish.name}}</option>
+    <label class="modal__lable">signatureDish</label>
+    <select name="dish" name="signatureDish"  formControlName="signatureDish">
+      <option *ngFor="let dish of dishes" [value]="restaurantModal.value.signatureDish">{{dish.name}}</option>
     </select>
     <label class="modal__lable">Popular</label>
     <div class="input__radio">
@@ -124,7 +134,7 @@
         class="modal__input"
         type="radio"
         value="true"
-        formControlName="isPopular"
+        formControlName="popular"
         [value]="true"
       />
       <label class="modal__lable"> Yes</label>
@@ -132,12 +142,22 @@
         class="modal__input"
         type="radio"
         value="false"
-        formControlName="isPopular"
+        formControlName="popular"
         [value]="false"
       />
       <label class="modal__lable"> No</label>
     </div>
     <button (click)="editRestaurant()">Submit</button>
   </form>
+  </app-add-modal>
+</div>
+<div *ngIf="isDeleteRestaurantOpen">
+  <app-add-modal [(isEditChefOpen)]="isDeleteRestaurantOpen" (isDeleteRestaurantOpenChange)="isDeleteRestaurantOpen=$event"> 
+    
+    <form class="modal__form">
+      <h1>Are you sure?</h1>       
+    <button (click)="deleteRestaurant()">Delete</button>
+    </form>
+  
   </app-add-modal>
 </div>

@@ -1,7 +1,7 @@
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{ element.Chef.name }}</td>
+    <td mat-cell *matCellDef="let element" style="padding: 0 15px;">{{ element.Chef.name }}</td>
   </ng-container>
 
   <ng-container matColumnDef="image">
@@ -12,14 +12,14 @@
   </ng-container>
 
   <ng-container matColumnDef="description">
-    <th mat-header-cell *matHeaderCellDef>Description</th>
-    <td mat-cell *matCellDef="let element">{{ element.Chef.description }}</td>
+    <th mat-header-cell *matHeaderCellDef style="padding: 0 15px;">Description</th>
+    <td mat-cell *matCellDef="let element" style="padding: 0 15px;">{{ element.Chef.description }}</td>
   </ng-container>
 
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef>Edit</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="openEditChefOfWeek(element.id)">
+      <button mat-button (click)="openEditChefOfWeek(element)">
         <i class="material-icons">edit</i>
       </button>
     </td>
@@ -33,15 +33,15 @@
     [(isAddChefOpen)]="isAddChefOfWeekOpen"
     (isAddChefOfWeekOpenChange)="isAddChefOfWeekOpen = $event"
   >
-    <form class="modal__form" [formGroup]="chefOfWeekModal">
-      <h1>Change chef</h1>
+    <form class="modal__form" >
+      <h1>Change chef of the week</h1>
       <label>Name</label>
-      <select name="chefs" name="selectedChef" formControlName="chefId">
-        <option *ngFor="let chef of chefs" [value]="chef.id">
+      <select name="chefs" name="selectedChef" [formControl]="chefOfWeekModal">
+        <option *ngFor="let chef of chefs" [value]="chef.name"  >
           {{ chef.name }}
         </option>
       </select>
-      <button (click)="editChefOfWeek()">Submit</button>
+      <button (click)="editChefOfWeek()" style="margin-top:20px;">Submit</button>
     </form>
   </app-add-modal>
 </div>

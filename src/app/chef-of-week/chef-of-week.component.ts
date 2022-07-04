@@ -8,11 +8,14 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./chef-of-week.component.scss'],
 })
 export class ChefOfWeekComponent implements OnInit {
-  chefOfWeekModal = new FormGroup({
-    name: new FormControl(),
-    chefId: new FormControl(),
-  });
-  displayedColumns: string[] = ['name', 'image', 'description', 'edit'];
+  // chefOfWeekModal = new FormGroup({
+  //   name: new FormControl(),
+  //   chef: new FormControl(),
+  // });
+
+  chefOfWeekModal = new FormControl();
+
+  displayedColumns: string[] = ['image', 'name', 'description', 'edit'];
   dataSource: any = [];
   constructor(public apiService: ApiService) {}
   chefOFWeekArray: any = [];
@@ -45,17 +48,22 @@ export class ChefOfWeekComponent implements OnInit {
     });
   }
 
-  openEditChefOfWeek(id: string) {
+  openEditChefOfWeek(row: any) {
+    this.chefOfWeekModal.patchValue(row.Chef.name);
     this.isAddChefOfWeekOpen = !this.isAddChefOfWeekOpen;
-    this.selectedChef = id;
-    console.log(id);
+    this.selectedChef = row.id;
   }
 
   editChefOfWeek() {
-    let body = { chefOfId: this.chefOfWeekModal.value.chefId };
+    this.chefs.forEach((chef: any) => {
+      if (this.chefOfWeekModal.value == chef.name) {
+        this.chefOfWeekModal.setValue(chef.id);
+      }
+    });
+    let body = { chefOfId: this.chefOfWeekModal.value };
     this.apiService.editChefOfWeek(this.selectedChef, body).subscribe((res) => {
-      this.isAddChefOfWeekOpen = !this.isAddChefOfWeekOpen;
       console.log(res);
+      this.isAddChefOfWeekOpen = !this.isAddChefOfWeekOpen;
     });
   }
 }
