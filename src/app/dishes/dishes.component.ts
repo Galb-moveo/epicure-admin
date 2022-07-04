@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { ApiService } from '../services/api.service';
 
 export interface dishBodyReq {
@@ -25,28 +20,29 @@ export interface dishBodyReq {
 })
 export class DishesComponent implements OnInit {
   public tagsArray: any = [
-    { name: 'spicy', value: 'https://svgshare.com/i/i45.svg' },
-    { name: 'veg', value: 'https://epicure-gal.s3.amazonaws.com/veg.svg' },
-    { name: 'vej', value: 'https://epicure-gal.s3.amazonaws.com/vej.svg' },
+    { name: 'https://svgshare.com/i/i45.svg', value: 'spicy' },
+    { name: 'https://epicure-gal.s3.amazonaws.com/veg.svg', value: 'veg' },
+    { name: 'https://epicure-gal.s3.amazonaws.com/vej.svg', value: 'vej' },
   ];
-  tags = new FormGroup({
-    isSpicy: new FormControl(false),
-    isVegan: new FormControl(false),
-    isVej: new FormControl(false),
-  });
+
+  isSpicy: FormControl = new FormControl(false);
+  isVegan: FormControl = new FormControl(false);
+  isVej: FormControl = new FormControl(false);
+
   dishModal = new FormGroup({});
   isEdit: boolean = false;
 
-  onChange() {
-    // console.log(this.tagsArray)
-  }
   title = 'Add dish';
   isActive: boolean = true;
   isAddDishOpen: boolean = false;
   isEditDishOpen: boolean = false;
   isDeleteDishOpen: boolean = false;
   selectedDish: string = '';
-  constructor(public apiService: ApiService, private fb: FormBuilder) {
+  constructor(
+    public apiService: ApiService,
+    private fb: FormBuilder,
+    private toastService: HotToastService,
+  ) {
     this.createFG();
   }
   createFG() {
@@ -56,7 +52,9 @@ export class DishesComponent implements OnInit {
       description: new FormControl(),
       price: new FormControl(),
       restaurantId: new FormControl(),
-      dishModalTags: this.tags,
+      isSpicy: this.isSpicy,
+      isVegan: this.isVegan,
+      isVej: this.isVej,
     });
   }
 
@@ -65,7 +63,7 @@ export class DishesComponent implements OnInit {
     'name',
     'description',
     'price',
-    // 'tags',
+    'tags',
     'edit',
     'delete',
   ];
@@ -96,8 +94,8 @@ export class DishesComponent implements OnInit {
           image: this.dishesArray[key].image,
           description: this.dishesArray[key].description,
           price: this.dishesArray[key].price,
-          signature: this.dishesArray[key].SignatureDish,
-          tag: this.dishesArray[key].tags,
+          // signature: this.dishesArray[key].SignatureDish,
+          tags: this.dishesArray[key].tags,
           Restaurant: this.dishesArray[key],
           RestaurantActive: this.dishesArray[key].isActive,
           id: this.dishesArray[key]._id,
@@ -112,12 +110,32 @@ export class DishesComponent implements OnInit {
     this.dishModal.reset();
     this.isAddDishOpen = !this.isAddDishOpen;
   }
-  openDeleteDish(id:string) {
+  openDeleteDish(id: string) {
     this.isDeleteDishOpen = !this.isDeleteDishOpen;
     this.selectedDish = id;
   }
 
   openEditDish(row: any) {
+    this.isSpicy.setValue(false);
+    this.isVegan.setValue(false);
+    this.isVej.setValue(false);
+
+    this.tagsArray.forEach((tag: any) => {
+      row.tags.map((tagItem: any) => {
+        if (tag.name == tagItem) {
+          if (tag.value == 'spicy') {
+            this.isSpicy.setValue(true);
+          } else if (tag.value == 'veg') {
+            this.isVegan.setValue(true);
+          } else if (tag.value == 'vej') {
+            this.isVej.setValue(true);
+          }
+        }
+      });
+    });
+    this.dishModal.value.isSpicy = this.isSpicy.value;
+    this.dishModal.value.isVegan = this.isVegan.value;
+    this.dishModal.value.isVej = this.isVej.value;
     this.dishModal.patchValue(row);
     this.isEdit = true;
     this.isEditDishOpen = !this.isEditDishOpen;
@@ -126,14 +144,14 @@ export class DishesComponent implements OnInit {
 
   addDish() {
     let array = [];
-    if (this.dishModal.value.dishModalTags.isSpicy) {
+    if (this.dishModal.value.isSpicy) {
       array.push('https://svgshare.com/i/i45.svg');
     }
-    if (this.dishModal.value.dishModalTags.isVegan) {
-      array.push('https://svgshare.com/i/i45.svg');
+    if (this.dishModal.value.isVegan) {
+      array.push('https://epicure-gal.s3.amazonaws.com/veg.svg');
     }
-    if (this.dishModal.value.dishModalTags.isVej) {
-      array.push('https://svgshare.com/i/i45.svg');
+    if (this.dishModal.value.isVej) {
+      array.push('https://epicure-gal.s3.amazonaws.com/vej.svg');
     }
     this.apiService
       .addDish(
@@ -146,22 +164,36 @@ export class DishesComponent implements OnInit {
         this.isActive,
       )
       .subscribe((res) => {
+        this.toastService.success('Dish Added successfully!');
+        setTimeout(() => window.location.reload(), 1500);
         console.log(res);
       });
     this.isAddDishOpen = !this.isAddDishOpen;
   }
 
   editDish() {
+    let array = [];
+    if (this.dishModal.value.isSpicy) {
+      array.push('https://svgshare.com/i/i45.svg');
+    }
+    if (this.dishModal.value.isVegan) {
+      array.push('https://epicure-gal.s3.amazonaws.com/veg.svg');
+    }
+    if (this.dishModal.value.isVej) {
+      array.push('https://epicure-gal.s3.amazonaws.com/vej.svg');
+    }
     let body: dishBodyReq = {
       name: this.dishModal.value.name,
       image: this.dishModal.value.image,
       description: this.dishModal.value.description,
       isActive: this.isActive,
       price: this.dishModal.value.price,
-      tags: this.dishModal.value.tags,
+      tags: array,
       Restaurant: this.dishModal.value.restaurantId,
     };
     this.apiService.editDish(this.selectedDish, body).subscribe((res) => {
+      this.toastService.success('Dish changed successfully!');
+      setTimeout(() => window.location.reload(), 1500);
       console.log(res);
     });
     this.isEditDishOpen = false;
@@ -169,7 +201,8 @@ export class DishesComponent implements OnInit {
 
   deleteDish() {
     this.apiService.deleteDish(this.selectedDish, false).subscribe((res) => {
-      // console.log(res);
+      this.toastService.success('Dish has been deleted successfully!');
+      setTimeout(() => window.location.reload(), 1500);
     });
     this.isDeleteDishOpen = !this.isDeleteDishOpen;
   }

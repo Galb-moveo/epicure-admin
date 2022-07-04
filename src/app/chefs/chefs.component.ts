@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { ApiService } from '../services/api.service';
 
 export interface chefBodyReq {
@@ -22,7 +23,7 @@ export class ChefsComponent implements OnInit {
   description: string = '';
   image: string = '';
   isActive: boolean = true;
-  constructor(public apiService: ApiService) {}
+  constructor(public apiService: ApiService, private toastService: HotToastService) {}
 
   displayedColumns: string[] = [
     'image',
@@ -73,7 +74,10 @@ export class ChefsComponent implements OnInit {
   addChef() {
     this.apiService
       .addChef(this.name, this.image, this.description, this.isActive)
-      .subscribe((res) => {});
+      .subscribe((res) => {
+        this.toastService.success('New chef added successfully!')
+        setTimeout(()=>window.location.reload(), 1000);
+      });
     this.isAddChefOpen = false;
   }
 
@@ -84,11 +88,18 @@ export class ChefsComponent implements OnInit {
       description: this.description,
       isActive: this.isActive,
     };
-    this.apiService.editChef(this.selectedChef, body).subscribe((res) => {});
+    this.apiService.editChef(this.selectedChef, body).subscribe((res) => {
+      this.toastService.success('Chef details changed successfully!')
+      setTimeout(()=>window.location.reload(), 1000);
+    });
     this.isEditChefOpen = false;
   }
 
   deleteChef() {
-    this.apiService.deleteChef(this.selectedChef, false).subscribe((res) => {});
+    this.apiService.deleteChef(this.selectedChef, false).subscribe((res) => {
+      this.toastService.success('Chef has been deleted successfully!')
+      setTimeout(()=>window.location.reload(), 1000);
+      this.isDeleteChefOpen = false;
+    });
   }
 }

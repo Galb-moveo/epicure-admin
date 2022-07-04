@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { ApiService } from '../services/api.service';
 
 @Component({
@@ -8,16 +9,13 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./chef-of-week.component.scss'],
 })
 export class ChefOfWeekComponent implements OnInit {
-  // chefOfWeekModal = new FormGroup({
-  //   name: new FormControl(),
-  //   chef: new FormControl(),
-  // });
+
 
   chefOfWeekModal = new FormControl();
 
   displayedColumns: string[] = ['image', 'name', 'description', 'edit'];
   dataSource: any = [];
-  constructor(public apiService: ApiService) {}
+  constructor(public apiService: ApiService, private toastService: HotToastService,) {}
   chefOFWeekArray: any = [];
   chefOFWeek: any = [];
   chefsArray: any = [];
@@ -62,8 +60,12 @@ export class ChefOfWeekComponent implements OnInit {
     });
     let body = { chefOfId: this.chefOfWeekModal.value };
     this.apiService.editChefOfWeek(this.selectedChef, body).subscribe((res) => {
+      this.toastService.success('Chef of the week changed successfully!')
+      setTimeout(()=>window.location.reload(), 1500);
       console.log(res);
       this.isAddChefOfWeekOpen = !this.isAddChefOfWeekOpen;
+      
     });
+    
   }
 }

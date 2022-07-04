@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
       .login(this.loginModal.value.email, this.loginModal.value.password)
       .subscribe(
         (response) => {
-          // console.log(response);
           this.loginModal.reset();
           this.router.navigate(['/chefs']);
           this.toastService.success('You have successfully logged in!');
