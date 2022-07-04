@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ApiService } from '../services/api.service';
 
 export interface dishBodyReq {
@@ -18,42 +24,48 @@ export interface dishBodyReq {
   styleUrls: ['./dishes.component.scss'],
 })
 export class DishesComponent implements OnInit {
-
   public tagsArray: any = [
     { name: 'spicy', value: 'https://svgshare.com/i/i45.svg' },
-    { name: 'veg', value: 'https://svgshare.com/i/i45.svg' },
-    { name: 'vej', value: 'https://svgshare.com/i/i45.svg' },
+    { name: 'veg', value: 'https://epicure-gal.s3.amazonaws.com/veg.svg' },
+    { name: 'vej', value: 'https://epicure-gal.s3.amazonaws.com/vej.svg' },
   ];
-
   tags = new FormGroup({
     isSpicy: new FormControl(false),
-    isVegan:new FormControl(false),
-    isVej:new FormControl(false),
-  })
-
-  dishModal = new FormGroup({
-    name: new FormControl(),
-    image: new FormControl(),
-    description: new FormControl(),
-    price: new FormControl(),
-    restaurantId: new FormControl(),
-    dishModalTags: this.tags
+    isVegan: new FormControl(false),
+    isVej: new FormControl(false),
   });
-  
-  onChange(){
-    console.log(this.tagsArray)
+  dishModal = new FormGroup({});
+  isEdit: boolean = false;
+
+  onChange() {
+    // console.log(this.tagsArray)
   }
   title = 'Add dish';
   isActive: boolean = true;
   isAddDishOpen: boolean = false;
   isEditDishOpen: boolean = false;
+  isDeleteDishOpen: boolean = false;
   selectedDish: string = '';
-  constructor(public apiService: ApiService) {}
+  constructor(public apiService: ApiService, private fb: FormBuilder) {
+    this.createFG();
+  }
+  createFG() {
+    this.dishModal = this.fb.group({
+      name: new FormControl(),
+      image: new FormControl(),
+      description: new FormControl(),
+      price: new FormControl(),
+      restaurantId: new FormControl(),
+      dishModalTags: this.tags,
+    });
+  }
+
   displayedColumns = [
-    'name',
     'image',
+    'name',
     'description',
     'price',
+    // 'tags',
     'edit',
     'delete',
   ];
@@ -70,8 +82,10 @@ export class DishesComponent implements OnInit {
         this.restaurants.push({
           name: this.restArray[key].name,
           id: this.restArray[key]._id,
+          isActive: this.restArray[key].isActive,
         });
       }
+      // console.log(this.restaurants)
     });
 
     this.apiService.getDishes().subscribe((res) => {
@@ -85,6 +99,7 @@ export class DishesComponent implements OnInit {
           signature: this.dishesArray[key].SignatureDish,
           tag: this.dishesArray[key].tags,
           Restaurant: this.dishesArray[key],
+          RestaurantActive: this.dishesArray[key].isActive,
           id: this.dishesArray[key]._id,
           isActive: this.dishesArray[key].isActive,
         });
@@ -94,26 +109,32 @@ export class DishesComponent implements OnInit {
     console.log(this.dishes);
   }
   openAddDish() {
+    this.dishModal.reset();
     this.isAddDishOpen = !this.isAddDishOpen;
   }
-
-  openEditDish(id: any) {
-    this.isEditDishOpen = !this.isEditDishOpen;
+  openDeleteDish(id:string) {
+    this.isDeleteDishOpen = !this.isDeleteDishOpen;
     this.selectedDish = id;
   }
 
+  openEditDish(row: any) {
+    this.dishModal.patchValue(row);
+    this.isEdit = true;
+    this.isEditDishOpen = !this.isEditDishOpen;
+    this.selectedDish = row.id;
+  }
+
   addDish() {
-  
-let array=[];
-if(this.dishModal.value.dishModalTags.isSpicy){
-  array.push('https://svgshare.com/i/i45.svg');
-}
-if(this.dishModal.value.dishModalTags.isVegan){
-  array.push('https://svgshare.com/i/i45.svg');
-}
-if(this.dishModal.value.dishModalTags.isVej){
-  array.push('https://svgshare.com/i/i45.svg');
-}
+    let array = [];
+    if (this.dishModal.value.dishModalTags.isSpicy) {
+      array.push('https://svgshare.com/i/i45.svg');
+    }
+    if (this.dishModal.value.dishModalTags.isVegan) {
+      array.push('https://svgshare.com/i/i45.svg');
+    }
+    if (this.dishModal.value.dishModalTags.isVej) {
+      array.push('https://svgshare.com/i/i45.svg');
+    }
     this.apiService
       .addDish(
         this.dishModal.value.name,
@@ -146,9 +167,10 @@ if(this.dishModal.value.dishModalTags.isVej){
     this.isEditDishOpen = false;
   }
 
-  deleteDish(id: string) {
-    this.apiService.deleteDish(id, false).subscribe((res) => {
-      console.log(res);
+  deleteDish() {
+    this.apiService.deleteDish(this.selectedDish, false).subscribe((res) => {
+      // console.log(res);
     });
+    this.isDeleteDishOpen = !this.isDeleteDishOpen;
   }
 }

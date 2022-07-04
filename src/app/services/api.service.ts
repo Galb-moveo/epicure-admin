@@ -10,8 +10,8 @@ import { restaurantBodyReq } from '../restaurants/restaurants.component';
 export class ApiService {
   constructor(private http: HttpClient) {}
 
-  BASE_URL: string = 'http://localhost:3000/api';
-  AUTH_URL: string = 'http://localhost:3000';
+  BASE_URL: string = 'http://3.82.121.223/api';
+  AUTH_URL: string = 'http://3.82.121.223/api';
 
   //////Restaurant requests
   getRestaurants() {
@@ -26,7 +26,7 @@ export class ApiService {
   addRestaurants(
     name: string,
     image: string,
-    isPopular: boolean,
+    popular: boolean,
     Chef: any,
     isActive: boolean,
     SignatureDish: any,
@@ -36,7 +36,7 @@ export class ApiService {
       {
         name: name,
         image: image,
-        isPopular: isPopular,
+        isPopular: popular,
         Chef: Chef,
         isActive: isActive,
         SignatureDish: SignatureDish,
@@ -55,13 +55,10 @@ export class ApiService {
       {
         name: body.name,
         image: body.image,
-        isPopular: body.isPopular,
+        popular: body.popular,
         Chef: body.Chef,
         isActive: body.isActive,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
+        SignatureDish:body.SignatureDish,
       },
       {
         headers: {

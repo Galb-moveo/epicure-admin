@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../services/api.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface restaurantBodyReq {
   name: string;
   image: string;
-  isPopular: boolean;
+  popular: boolean;
   Chef: any;
   isActive: boolean;
-  SignatureDish:any;
+  SignatureDish: any;
 }
 
 @Component({
@@ -17,46 +19,45 @@ export interface restaurantBodyReq {
   styleUrls: ['./restaurants.component.scss'],
 })
 export class RestaurantsComponent implements OnInit {
-  constructor(private apiService: ApiService) {    
-  }
-  restaurantModal = new FormGroup({
-    name: new FormControl(),
-    image: new FormControl(),
-    isPopular: new FormControl(),
-    chefId: new FormControl(),
-    signatureId: new FormControl()
-  });
+  constructor(private apiService: ApiService, private fb: FormBuilder) {}
+
+  teams: any = [];
+  dataSource:any = [];
+
   title = 'Add Restaurant';
-  // name: string = '';
-  // image: string = '';
-  // popular: boolean = false;
-  // selectedChef: any;
   isActive: boolean = true;
-  // Chef: any;
   selectedRestaurant: string = '';
 
   isAddRestaurantOpen: boolean = false;
   isEditRestaurantOpen: boolean = false;
+  isDeleteRestaurantOpen: boolean = false;
   chefsArray: any = [];
   chefs: any = [];
-  token:any = localStorage.getItem('token')
+  token: any = localStorage.getItem('token');
 
   displayedColumns: string[] = [
-    'name',
     'image',
+    'name',
     'popular',
     'chef',
     'edit',
     'delete',
   ];
-  dataSource: any = [];
+  //dataSource: any = [];
   restaurantsArray: any = [];
-  dishesArray:any=[]
-  dishes:any = [];
+  dishesArray: any = [];
+  dishes: any = [];
 
-  teams: any = [];
-
+  restaurantModal = new FormGroup({});
   ngOnInit(): void {
+    this.restaurantModal = this.fb.group({
+      name: new FormControl(),
+      image: new FormControl(),
+      popular: new FormControl(),
+      chef: new FormControl(),
+      signatureDish: new FormControl(),
+    });
+
     this.apiService.getChefs().subscribe((res) => {
       this.chefsArray = res;
       for (const key in this.chefsArray) {
@@ -64,8 +65,8 @@ export class RestaurantsComponent implements OnInit {
           name: this.chefsArray[key].name,
           id: this.chefsArray[key]._id,
         });
-        // console.log(this.chefs);
       }
+      // console.log(this.chefs);
     });
     this.apiService.getDishes().subscribe((res) => {
       this.dishesArray = res;
@@ -73,6 +74,7 @@ export class RestaurantsComponent implements OnInit {
         this.dishes.push({
           name: this.dishesArray[key].name,
           id: this.dishesArray[key]._id,
+          isActive: this.dishesArray[key].isActive,
         });
         // console.log(this.dishes);
       }
@@ -86,13 +88,14 @@ export class RestaurantsComponent implements OnInit {
           image: this.restaurantsArray[key].image,
           popular: this.restaurantsArray[key].isPopular,
           chef: this.restaurantsArray[key].Chef,
-          signatureDish:this.restaurantsArray[key].SignatureDish,
+          signatureDish: this.restaurantsArray[key].SignatureDish,
+          // dishActive: this.restaurantsArray[key].signatureDish.isActive,
           id: this.restaurantsArray[key]._id,
         });
       }
       this.dataSource = this.teams;
     });
-    // console.log(this.teams);
+    console.log(this.teams);
   }
 
   addRestaurant() {
@@ -100,10 +103,10 @@ export class RestaurantsComponent implements OnInit {
       .addRestaurants(
         this.restaurantModal.value.name,
         this.restaurantModal.value.image,
-        this.restaurantModal.value.isPopular,
-        this.restaurantModal.value.chefId,
+        this.restaurantModal.value.popular,
+        this.restaurantModal.value.chef,
         this.isActive,
-        this.restaurantModal.value.signatureId,
+        this.restaurantModal.value.signatureDish,
       )
       .subscribe((res: any) => {
         this.isAddRestaurantOpen = !this.isAddRestaurantOpen;
@@ -111,21 +114,26 @@ export class RestaurantsComponent implements OnInit {
       });
   }
   openAddRestaurant() {
+    this.restaurantModal.reset();
     this.isAddRestaurantOpen = !this.isAddRestaurantOpen;
   }
-
-  openEditRestaurant(id: string) {
-    this.isEditRestaurantOpen = !this.isEditRestaurantOpen;
+  openDeleteRestaurant(id:string) {
+    this.isDeleteRestaurantOpen = !this.isDeleteRestaurantOpen;
     this.selectedRestaurant = id;
   }
 
+  openEditRestaurant(row: any) {
+    this.restaurantModal.patchValue(row);  
+    this.isEditRestaurantOpen = !this.isEditRestaurantOpen;
+    this.selectedRestaurant = row.id;
+  }
   editRestaurant() {
     let body: restaurantBodyReq = {
       name:this.restaurantModal.value.name,
       image: this.restaurantModal.value.image,
       isActive: this.isActive,
       Chef: this.restaurantModal.value.chefId,
-      isPopular:  this.restaurantModal.value.isPopular,
+      popular:  this.restaurantModal.value.popular,
       SignatureDish: this.restaurantModal.value.signatureId
     };
     this.apiService
@@ -136,9 +144,10 @@ export class RestaurantsComponent implements OnInit {
     this.isEditRestaurantOpen = false;
   }
 
-  deleteRestaurant(id: string) {
-    this.apiService.deleteRestaurant(id, false).subscribe((res) => {
+  deleteRestaurant() {
+    this.apiService.deleteRestaurant(this.selectedRestaurant, false).subscribe((res) => {
       console.log(res);
     });
+    this.isDeleteRestaurantOpen = !this.isDeleteRestaurantOpen;
   }
 }

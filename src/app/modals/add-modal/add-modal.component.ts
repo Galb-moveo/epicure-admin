@@ -8,7 +8,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class AddModalComponent implements OnInit {
   @Input() isAddChefOpen: boolean = false;
-  @Input() isEditChefOpen: boolean = false;
+  @Input() isEditChefOpen: boolean = false;  
+  
+  @Output() isDeleteDishOpenChange = new EventEmitter<boolean>();
+  @Output() isDeleteRestaurantOpenChange = new EventEmitter<boolean>();
+  @Output() isDeleteChefOpenChange = new EventEmitter<boolean>();
   @Output() isLoginOpenChange = new EventEmitter<boolean>();
   @Output() isEditDishOpenChange = new EventEmitter<boolean>();
   @Output() isAddChefOfWeekOpenChange = new EventEmitter<boolean>();

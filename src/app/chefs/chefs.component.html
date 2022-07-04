@@ -6,8 +6,8 @@
 
 
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    <th mat-header-cell *matHeaderCellDef style="padding: 0 15px;">Name</th>
+    <td mat-cell *matCellDef="let element" style="padding: 0 15px;">{{ element.name }}</td>
   </ng-container>
 
   <ng-container matColumnDef="image">
@@ -30,14 +30,14 @@
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef>Edit</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="openEditChef(element.id)"><i class="material-icons">edit</i></button>
+      <button mat-button (click)="openEditChef(element)"><i class="material-icons">edit</i></button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef>Delete</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="deleteChef(element.id)"><i class="material-icons">delete_outline</i></button>
+      <button mat-button (click)="openDeleteChef(element.id)"><i class="material-icons">delete_outline</i></button>
     </td>
   </ng-container>
 
@@ -57,27 +57,7 @@
 
         <label>Image</label>
         <input type="text" name="image" [(ngModel)]="image">
-        <!-- <label class="modal__lable">Active</label>
-        <div class="input__radio">
-          <input
-            class="modal__input"
-            type="radio"
-            name="popular"
-            value="true"
-            name="active"
-            [(ngModel)]="isActive"
-          />
-          <label class="modal__lable"> Yes</label>
-          <input
-            class="modal__input"
-            type="radio"
-            name="popular"
-            value="false"
-            name="popular"
-            [(ngModel)]="isActive"
-          />
-          <label class="modal__lable"> No</label>
-        </div> -->
+
         <button (click)="addChef()">Submit</button>
       </form>
     
@@ -96,28 +76,18 @@
 
         <label>Image</label>
         <input type="text" name="image" [(ngModel)]="image">
-        <label class="modal__lable">Active</label>
-        <div class="input__radio">
-          <input
-            class="modal__input"
-            type="radio"
-            name="popular"
-            value="true"
-            name="active"
-            [(ngModel)]="isActive"
-          />
-          <label class="modal__lable"> Yes</label>
-          <input
-            class="modal__input"
-            type="radio"
-            name="popular"
-            value="false"
-            name="popular"
-            [(ngModel)]="isActive"
-          />
-          <label class="modal__lable"> No</label>
-        </div>
         <button (click)="editChef()">Submit</button>
       </form>
     
     </app-add-modal>
+  </div>
+  <div *ngIf="isDeleteChefOpen">
+    <app-add-modal [(isEditChefOpen)]="isDeleteChefOpen" (isDeleteChefOpenChange)="isDeleteChefOpen=$event"> 
+      
+      <form class="modal__form">
+        <h1>Are you sure?</h1>       
+      <button (click)="deleteChef()">Delete</button>
+      </form>
+    
+    </app-add-modal>
+  </div>
