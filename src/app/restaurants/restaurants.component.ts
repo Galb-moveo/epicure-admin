@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { ApiService } from '../services/api.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 
 export interface restaurantBodyReq {
   name: string;
@@ -19,10 +18,10 @@ export interface restaurantBodyReq {
   styleUrls: ['./restaurants.component.scss'],
 })
 export class RestaurantsComponent implements OnInit {
-  constructor(private apiService: ApiService, private fb: FormBuilder) {}
+  constructor(private apiService: ApiService, private fb: FormBuilder,private toastService: HotToastService) {}
 
   teams: any = [];
-  dataSource:any = [];
+  dataSource: any = [];
 
   title = 'Add Restaurant';
   isActive: boolean = true;
@@ -89,7 +88,6 @@ export class RestaurantsComponent implements OnInit {
           popular: this.restaurantsArray[key].isPopular,
           chef: this.restaurantsArray[key].Chef,
           signatureDish: this.restaurantsArray[key].SignatureDish,
-          // dishActive: this.restaurantsArray[key].signatureDish.isActive,
           id: this.restaurantsArray[key]._id,
         });
       }
@@ -110,6 +108,8 @@ export class RestaurantsComponent implements OnInit {
       )
       .subscribe((res: any) => {
         this.isAddRestaurantOpen = !this.isAddRestaurantOpen;
+        this.toastService.success('Restaurant Added successfully!')
+        setTimeout(()=>window.location.reload(), 1500)
         console.log(res);
       });
   }
@@ -117,37 +117,44 @@ export class RestaurantsComponent implements OnInit {
     this.restaurantModal.reset();
     this.isAddRestaurantOpen = !this.isAddRestaurantOpen;
   }
-  openDeleteRestaurant(id:string) {
+  openDeleteRestaurant(id: string) {
     this.isDeleteRestaurantOpen = !this.isDeleteRestaurantOpen;
     this.selectedRestaurant = id;
   }
 
   openEditRestaurant(row: any) {
-    this.restaurantModal.patchValue(row);  
+    this.restaurantModal.patchValue(row);
     this.isEditRestaurantOpen = !this.isEditRestaurantOpen;
     this.selectedRestaurant = row.id;
   }
   editRestaurant() {
     let body: restaurantBodyReq = {
-      name:this.restaurantModal.value.name,
+      name: this.restaurantModal.value.name,
       image: this.restaurantModal.value.image,
       isActive: this.isActive,
       Chef: this.restaurantModal.value.chefId,
-      popular:  this.restaurantModal.value.popular,
-      SignatureDish: this.restaurantModal.value.signatureId
+      popular: this.restaurantModal.value.popular,
+      SignatureDish: this.restaurantModal.value.signatureId,
     };
     this.apiService
       .editRestaurant(this.selectedRestaurant, body)
       .subscribe((res) => {
+        this.toastService.success('Restaurant changed successfully!')
+        setTimeout(()=>window.location.reload(), 1500);
         console.log(res);
       });
     this.isEditRestaurantOpen = false;
+   
   }
 
   deleteRestaurant() {
-    this.apiService.deleteRestaurant(this.selectedRestaurant, false).subscribe((res) => {
-      console.log(res);
-    });
+    this.apiService
+      .deleteRestaurant(this.selectedRestaurant, false)
+      .subscribe((res) => {
+        this.toastService.success('Restaurant has been deleted successfully!')
+        setTimeout(()=>window.location.reload(), 1500);
+        console.log(res);
+      });
     this.isDeleteRestaurantOpen = !this.isDeleteRestaurantOpen;
   }
 }

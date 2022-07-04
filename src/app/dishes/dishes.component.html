@@ -31,12 +31,21 @@
     </td>
   </ng-container>
 
-  <!-- <ng-container matColumnDef="tags" *ngFor="let dish of dishes">
+  <ng-container matColumnDef="tags">
     <th mat-header-cell *matHeaderCellDef>Tags</th>
     <td mat-cell *matCellDef="let element">
-      <img class="dish__image" [src]="dish.tags" alt="" />
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <div *ngFor="let tag of element.tags">
+          <img
+            class="dish__image"
+            style="height: 32px; width: 32px"
+            [src]="tag"
+            alt=""
+          />
+        </div>
+      </div>
     </td>
-  </ng-container> -->
+  </ng-container>
 
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef>Edit</th>
@@ -91,24 +100,15 @@
       <label class="modal__lable">Price</label>
       <input class="modal__input" type="number" formControlName="price" />
       <label for="">Tags</label>
-      <!-- 
-      <div *ngFor="let tag of tagsArray">
-        <label for="tag"  formControlName="tags"> {{tag.name}}</label><br />
-      <input
-        type="checkbox"
-        name="tag"
-        
-        (change)="onChange()"
-      />
-      </div> -->
-      <form [formGroup]="tags">
+
+      <div>
         <label>spicy</label>
         <input type="checkbox" name="spicy" formControlName="isSpicy" />
         <label>veg</label>
         <input type="checkbox" name="vagen" formControlName="isVegan" />
         <label> vej</label>
         <input type="checkbox" name="vej" formControlName="isVej" />
-      </form>
+      </div>
       <button (click)="addDish()">Submit</button>
     </form>
   </app-add-modal>
@@ -154,15 +154,16 @@
       </select>
       <label class="modal__lable">Price</label>
       <input class="modal__input" type="number" formControlName="price" />
-      <label for="">Tags</label>
-      <form [formGroup]="tags">
+
+      <div>
         <label>spicy</label>
-        <input type="checkbox" name="spicy" formControlName="isSpicy" />
+        <input type="checkbox" formControlName="isSpicy" />
         <label>veg</label>
-        <input type="checkbox" name="vagen" formControlName="isVegan" />
+        <input type="checkbox" formControlName="isVegan" name="vegan" />
         <label> vej</label>
         <input type="checkbox" name="vej" formControlName="isVej" />
-      </form>
+      </div>
+
       <button type="submit" (click)="editDish()">Submit</button>
     </form>
   </app-add-modal>
@@ -170,7 +171,8 @@
 <div *ngIf="isDeleteDishOpen">
   <app-add-modal
     [(isAddChefOpen)]="isDeleteDishOpen"
-    (isDeleteDishOpenChange)="isDeleteDishOpen=$event">
+    (isDeleteDishOpenChange)="isDeleteDishOpen = $event"
+  >
     <form class="modal__form">
       <h1>Are you sure?</h1>
       <button (click)="deleteDish()">Delete</button>
