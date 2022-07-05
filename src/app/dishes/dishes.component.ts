@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
+import { take } from 'rxjs';
 import { ApiService } from '../services/api.service';
 
 export interface dishBodyReq {
@@ -42,6 +43,7 @@ export class DishesComponent implements OnInit {
     public apiService: ApiService,
     private fb: FormBuilder,
     private toastService: HotToastService,
+    private changeDetectorRefs: ChangeDetectorRef,
   ) {
     this.createFG();
   }
@@ -67,11 +69,12 @@ export class DishesComponent implements OnInit {
     'edit',
     'delete',
   ];
-  dataSource: any = [];
+  //dataSource: any = [];
   dishesArray: any = [];
   dishes: any = [];
   restArray: any = [];
   restaurants: any = [];
+  test: any = [];
 
   ngOnInit(): void {
     this.apiService.getRestaurants().subscribe((res) => {
@@ -89,7 +92,7 @@ export class DishesComponent implements OnInit {
     this.apiService.getDishes().subscribe((res) => {
       this.dishesArray = res;
       for (const key in this.dishesArray) {
-        this.dishes.push({
+        this.test.push({
           name: this.dishesArray[key].name,
           image: this.dishesArray[key].image,
           description: this.dishesArray[key].description,
@@ -98,13 +101,12 @@ export class DishesComponent implements OnInit {
           tags: this.dishesArray[key].tags,
           Restaurant: this.dishesArray[key],
           RestaurantActive: this.dishesArray[key].isActive,
-          id: this.dishesArray[key]._id,
+          _id: this.dishesArray[key]._id,
           isActive: this.dishesArray[key].isActive,
         });
       }
-      this.dataSource = this.dishes;
+      this.dishes = this.test;
     });
-    console.log(this.dishes);
   }
   openAddDish() {
     this.dishModal.reset();
@@ -139,7 +141,7 @@ export class DishesComponent implements OnInit {
     this.dishModal.patchValue(row);
     this.isEdit = true;
     this.isEditDishOpen = !this.isEditDishOpen;
-    this.selectedDish = row.id;
+    this.selectedDish = row._id;
   }
 
   addDish() {
@@ -165,7 +167,9 @@ export class DishesComponent implements OnInit {
       )
       .subscribe((res) => {
         this.toastService.success('Dish Added successfully!');
-        setTimeout(() => window.location.reload(), 1500);
+        this.apiService.getDishes().subscribe((res) => {
+          this.dishes = res;
+        });
         console.log(res);
       });
     this.isAddDishOpen = !this.isAddDishOpen;
@@ -192,17 +196,23 @@ export class DishesComponent implements OnInit {
       Restaurant: this.dishModal.value.restaurantId,
     };
     this.apiService.editDish(this.selectedDish, body).subscribe((res) => {
+      this.apiService.getDishes().subscribe((res) => {
+        //this.dataSource = res;
+        this.dishes = res;
+      });
       this.toastService.success('Dish changed successfully!');
-      setTimeout(() => window.location.reload(), 1500);
       console.log(res);
     });
     this.isEditDishOpen = false;
+    //this.dataSource = this.dishes
   }
 
   deleteDish() {
     this.apiService.deleteDish(this.selectedDish, false).subscribe((res) => {
       this.toastService.success('Dish has been deleted successfully!');
-      setTimeout(() => window.location.reload(), 1500);
+      this.apiService.getDishes().subscribe((res) => {
+        this.dishes = res;
+      });
     });
     this.isDeleteDishOpen = !this.isDeleteDishOpen;
   }

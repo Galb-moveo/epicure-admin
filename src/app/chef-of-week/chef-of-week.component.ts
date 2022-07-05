@@ -9,13 +9,14 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./chef-of-week.component.scss'],
 })
 export class ChefOfWeekComponent implements OnInit {
-
-
   chefOfWeekModal = new FormControl();
 
   displayedColumns: string[] = ['image', 'name', 'description', 'edit'];
   dataSource: any = [];
-  constructor(public apiService: ApiService, private toastService: HotToastService,) {}
+  constructor(
+    public apiService: ApiService,
+    private toastService: HotToastService,
+  ) {}
   chefOFWeekArray: any = [];
   chefOFWeek: any = [];
   chefsArray: any = [];
@@ -27,12 +28,12 @@ export class ChefOfWeekComponent implements OnInit {
     this.apiService.getChefOfWeek().subscribe((res) => {
       this.chefOFWeekArray = res;
       for (const key in this.chefOFWeekArray) {
-        this.chefOFWeek.push({
-          id: this.chefOFWeekArray[key]._id,
+        this.dataSource.push({
+          _id: this.chefOFWeekArray[key]._id,
           Chef: this.chefOFWeekArray[key].Chef,
         });
       }
-      this.dataSource = this.chefOFWeek;
+      this.chefOFWeek = this.dataSource;
     });
 
     this.apiService.getChefs().subscribe((res) => {
@@ -40,7 +41,7 @@ export class ChefOfWeekComponent implements OnInit {
       for (const key in this.chefsArray) {
         this.chefs.push({
           name: this.chefsArray[key].name,
-          id: this.chefsArray[key]._id,
+          _id: this.chefsArray[key]._id,
         });
       }
     });
@@ -49,23 +50,23 @@ export class ChefOfWeekComponent implements OnInit {
   openEditChefOfWeek(row: any) {
     this.chefOfWeekModal.patchValue(row.Chef.name);
     this.isAddChefOfWeekOpen = !this.isAddChefOfWeekOpen;
-    this.selectedChef = row.id;
+    this.selectedChef = row._id;
   }
 
   editChefOfWeek() {
     this.chefs.forEach((chef: any) => {
       if (this.chefOfWeekModal.value == chef.name) {
-        this.chefOfWeekModal.setValue(chef.id);
+        this.chefOfWeekModal.setValue(chef._id);
       }
     });
     let body = { chefOfId: this.chefOfWeekModal.value };
     this.apiService.editChefOfWeek(this.selectedChef, body).subscribe((res) => {
-      this.toastService.success('Chef of the week changed successfully!')
-      setTimeout(()=>window.location.reload(), 1500);
+      this.toastService.success('Chef of the week changed successfully!');
+      this.apiService.getChefOfWeek().subscribe((res) => {
+        this.chefOFWeek = res;
+      });
       console.log(res);
       this.isAddChefOfWeekOpen = !this.isAddChefOfWeekOpen;
-      
     });
-    
   }
 }

@@ -26,7 +26,7 @@ export class ApiService {
   addRestaurants(
     name: string,
     image: string,
-    popular: boolean,
+    isPopular: boolean,
     Chef: any,
     isActive: boolean,
     SignatureDish: any,
@@ -36,7 +36,7 @@ export class ApiService {
       {
         name: name,
         image: image,
-        isPopular: popular,
+        isPopular: isPopular,
         Chef: Chef,
         isActive: isActive,
         SignatureDish: SignatureDish,
@@ -55,7 +55,7 @@ export class ApiService {
       {
         name: body.name,
         image: body.image,
-        popular: body.popular,
+        isPopular: body.isPopular,
         Chef: body.Chef,
         isActive: body.isActive,
         SignatureDish:body.SignatureDish,
