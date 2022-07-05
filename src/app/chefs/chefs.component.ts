@@ -23,7 +23,10 @@ export class ChefsComponent implements OnInit {
   description: string = '';
   image: string = '';
   isActive: boolean = true;
-  constructor(public apiService: ApiService, private toastService: HotToastService) {}
+  constructor(
+    public apiService: ApiService,
+    private toastService: HotToastService,
+  ) {}
 
   displayedColumns: string[] = [
     'image',
@@ -46,7 +49,7 @@ export class ChefsComponent implements OnInit {
           image: this.chefsArray[key].image,
           description: this.chefsArray[key].description,
           isActive: this.chefsArray[key].isActive,
-          id: this.chefsArray[key]._id,
+          _id: this.chefsArray[key]._id,
         });
       }
       this.dataSource = this.chefs;
@@ -58,9 +61,9 @@ export class ChefsComponent implements OnInit {
     this.image = '';
     this.description = '';
   }
-  openDeleteChef(id: string) {
+  openDeleteChef(_id: string) {
     this.isDeleteChefOpen = !this.isDeleteChefOpen;
-    this.selectedChef = id;
+    this.selectedChef = _id;
   }
 
   openEditChef(row: any) {
@@ -68,15 +71,17 @@ export class ChefsComponent implements OnInit {
     this.name = row.name;
     this.image = row.image;
     this.description = row.description;
-    this.selectedChef = row.id;
+    this.selectedChef = row._id;
   }
 
   addChef() {
     this.apiService
       .addChef(this.name, this.image, this.description, this.isActive)
       .subscribe((res) => {
-        this.toastService.success('New chef added successfully!')
-        setTimeout(()=>window.location.reload(), 1000);
+        this.toastService.success('New chef added successfully!');
+        this.apiService.getChefs().subscribe((res) => {
+          this.dataSource = res;
+        });
       });
     this.isAddChefOpen = false;
   }
@@ -89,16 +94,20 @@ export class ChefsComponent implements OnInit {
       isActive: this.isActive,
     };
     this.apiService.editChef(this.selectedChef, body).subscribe((res) => {
-      this.toastService.success('Chef details changed successfully!')
-      setTimeout(()=>window.location.reload(), 1000);
+      this.toastService.success('Chef details changed successfully!');
+      this.apiService.getChefs().subscribe((res) => {
+        this.dataSource = res;
+      });
     });
     this.isEditChefOpen = false;
   }
 
   deleteChef() {
     this.apiService.deleteChef(this.selectedChef, false).subscribe((res) => {
-      this.toastService.success('Chef has been deleted successfully!')
-      setTimeout(()=>window.location.reload(), 1000);
+      this.toastService.success('Chef has been deleted successfully!');
+      this.apiService.getChefs().subscribe((res) => {
+        this.dataSource = res;
+      });
       this.isDeleteChefOpen = false;
     });
   }
