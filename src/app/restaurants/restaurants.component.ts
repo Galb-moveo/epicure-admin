@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { BehaviorSubject, switchMap } from 'rxjs';
@@ -56,11 +56,11 @@ export class RestaurantsComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantModal = this.fb.group({
-      name: new FormControl(),
-      image: new FormControl(),
-      isPopular: new FormControl(),
-      Chef: new FormControl(),
-      SignatureDish: new FormControl(),
+      name: ['',[Validators.minLength(2),Validators.required]],
+      image: ['',Validators.required],
+      isPopular: ['',Validators.required],
+      Chef: ['',Validators.required],
+      SignatureDish: ['',Validators.required],
     });
 
     this.apiService.getChefs().subscribe((res) => {

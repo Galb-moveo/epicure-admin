@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { take } from 'rxjs';
 import { ApiService } from '../services/api.service';
@@ -49,11 +49,11 @@ export class DishesComponent implements OnInit {
   }
   createFG() {
     this.dishModal = this.fb.group({
-      name: new FormControl(),
-      image: new FormControl(),
-      description: new FormControl(),
-      price: new FormControl(),
-      restaurantId: new FormControl(),
+      name:['',[Validators.minLength(2),Validators.required]],
+      image: ['',Validators.required],
+      description: ['',[Validators.required, Validators.minLength(4)]],
+      price: ['',Validators.required],
+      restaurantId: [Validators.required],
       isSpicy: this.isSpicy,
       isVegan: this.isVegan,
       isVej: this.isVej,
@@ -143,7 +143,6 @@ export class DishesComponent implements OnInit {
     this.isEditDishOpen = !this.isEditDishOpen;
     this.selectedDish = row._id;
   }
-
   addDish() {
     let array = [];
     if (this.dishModal.value.isSpicy) {
