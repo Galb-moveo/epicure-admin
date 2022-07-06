@@ -56,11 +56,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-
-  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-showFirstLastButtons 
-aria-label="Select page of periodic elements">
-</mat-paginator> -->
 </div>
 
 <div *ngIf="isAddRestaurantOpen">
@@ -72,23 +67,58 @@ aria-label="Select page of periodic elements">
       <h1 class="modal__title">{{ title }}</h1>
       <label class="modal__lable">Name</label>
       <input formControlName="name" placeholder="Enter Name" />
-      <!-- <input  type="text" id="name" name="name" [(ngModel)]="name" /> -->
-
+      <div
+        *ngIf="
+          restaurantModal.controls['name'].invalid &&
+          (restaurantModal.controls['name'].touched ||
+            restaurantModal.controls['name'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Name is required with at least 2 characters</span>
+      </div>
       <label>Image</label>
-      <input type="text" name="image" formControlName="image" />
-      <!-- <input type="text" name="image" [(ngModel)]="image" formControlName="image"> -->
+      <input type="text" name="image" formControlName="image" placeholder="Enter image url"/>
+      <div
+        *ngIf="
+          restaurantModal.controls['image'].invalid &&
+          (restaurantModal.controls['image'].touched ||
+            restaurantModal.controls['image'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Image is required</span>
+      </div>
       <label class="modal__lable">Chef</label>
       <select name="chefs" name="selectedChef" formControlName="Chef">
         <option *ngFor="let chef of chefs" [value]="chef._id">
           {{ chef.name }}
         </option>
       </select>
+      <div
+        *ngIf="
+          restaurantModal.controls['Chef'].invalid &&
+          (restaurantModal.controls['Chef'].touched ||
+            restaurantModal.controls['Chef'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Chef is required</span>
+      </div>
       <label class="modal__lable">signatureDish</label>
       <select name="SignatureDish" formControlName="SignatureDish">
         <option *ngFor="let dish of dishes" [value]="dish._id">
           {{ dish.name }}
         </option>
       </select>
+      <div
+        *ngIf="
+          restaurantModal.controls['SignatureDish'].invalid &&
+          (restaurantModal.controls['SignatureDish'].touched ||
+            restaurantModal.controls['SignatureDish'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px"
+          >signatureDish is required</span
+        >
+      </div>
       <label class="modal__lable">Popular</label>
       <div class="input__radio">
         <input
@@ -108,7 +138,18 @@ aria-label="Select page of periodic elements">
         />
         <label class="modal__lable"> No</label>
       </div>
-      <button (click)="addRestaurant()">Submit</button>
+      <button
+        [disabled]="
+          restaurantModal.controls['name'].invalid ||
+          restaurantModal.controls['image'].invalid ||
+          restaurantModal.controls['Chef'].invalid ||
+          restaurantModal.controls['SignatureDish'].invalid ||
+          restaurantModal.controls['isPopular'].invalid
+        "
+        (click)="addRestaurant()"
+      >
+        Submit
+      </button>
     </form>
   </app-add-modal>
 </div>
@@ -122,19 +163,37 @@ aria-label="Select page of periodic elements">
       <h1 class="modal__title">Edit Restaurant</h1>
       <label class="modal__lable">Name</label>
       <input formControlName="name" placeholder="Enter Name" />
-      <!-- <input  type="text" id="name" name="name" [(ngModel)]="name" /> -->
+      <div
+      *ngIf="
+        restaurantModal.controls['name'].invalid &&
+        (restaurantModal.controls['name'].touched ||
+          restaurantModal.controls['name'].dirty)
+      "
+    >
+      <span style="color: red; font-size: 12px">Name is required with at least 2 characters</span>
+    </div>
 
       <label>Image</label>
       <input type="text" name="image" formControlName="image" />
-      <!-- <input type="text" name="image" [(ngModel)]="image" formControlName="image"> -->
+      <div
+      *ngIf="
+        restaurantModal.controls['image'].invalid &&
+        (restaurantModal.controls['image'].touched ||
+          restaurantModal.controls['image'].dirty)
+      "
+    >
+      <span style="color: red; font-size: 12px">Image is required</span>
+    </div>
       <label class="modal__lable">Chef</label>
       <select [value]="restaurantModal.value.Chef" formControlName="Chef">
         <option *ngFor="let chef of chefs">{{ chef.name }}</option>
       </select>
+
       <label class="modal__lable">signatureDish</label>
       <select name="SignatureDish" formControlName="SignatureDish">
         <option *ngFor="let dish of dishes">{{ dish.name }}</option>
       </select>
+
       <label class="modal__lable">Popular</label>
       <div class="input__radio">
         <input
@@ -154,7 +213,14 @@ aria-label="Select page of periodic elements">
         />
         <label class="modal__lable"> No</label>
       </div>
-      <button (click)="editRestaurant()">Submit</button>
+      <button 
+      [disabled]="
+      restaurantModal.controls['name'].invalid ||
+      restaurantModal.controls['image'].invalid ||
+      restaurantModal.controls['Chef'].invalid ||
+      restaurantModal.controls['SignatureDish'].invalid ||
+      restaurantModal.controls['isPopular'].invalid
+    " (click)="editRestaurant()">Submit</button>
     </form>
   </app-add-modal>
 </div>

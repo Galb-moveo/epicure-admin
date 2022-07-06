@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { ApiService } from '../services/api.service';
 
@@ -26,8 +27,8 @@ export class ChefsComponent implements OnInit {
   constructor(
     public apiService: ApiService,
     private toastService: HotToastService,
+    private fb: FormBuilder,
   ) {}
-
   displayedColumns: string[] = [
     'image',
     'name',
@@ -39,6 +40,12 @@ export class ChefsComponent implements OnInit {
   chefsArray: any = [];
   chefs: any = [];
   selectedChef: any;
+
+      chefModal = this.fb.group({
+      name:['',[Validators.minLength(2),Validators.required]],
+      image: ['',Validators.required],
+      description: ['',[Validators.required, Validators.minLength(4)]],
+    });
 
   ngOnInit(): void {
     this.apiService.getChefs().subscribe((res) => {
@@ -57,9 +64,7 @@ export class ChefsComponent implements OnInit {
   }
   openAddChef() {
     this.isAddChefOpen = !this.isAddChefOpen;
-    this.name = '';
-    this.image = '';
-    this.description = '';
+    this.chefModal.reset();
   }
   openDeleteChef(_id: string) {
     this.isDeleteChefOpen = !this.isDeleteChefOpen;
@@ -67,16 +72,15 @@ export class ChefsComponent implements OnInit {
   }
 
   openEditChef(row: any) {
+    
     this.isEditChefOpen = !this.isEditChefOpen;
-    this.name = row.name;
-    this.image = row.image;
-    this.description = row.description;
+    this.chefModal.patchValue(row);
     this.selectedChef = row._id;
   }
 
   addChef() {
     this.apiService
-      .addChef(this.name, this.image, this.description, this.isActive)
+      .addChef(this.chefModal.value.name, this.chefModal.value.image, this.chefModal.value.description, this.isActive)
       .subscribe((res) => {
         this.toastService.success('New chef added successfully!');
         this.apiService.getChefs().subscribe((res) => {
@@ -88,10 +92,10 @@ export class ChefsComponent implements OnInit {
 
   editChef() {
     let body: chefBodyReq = {
-      name: this.name,
-      image: this.image,
-      description: this.description,
-      isActive: this.isActive,
+      name: this.chefModal.value.name,
+      image: this.chefModal.value.image,
+      description: this.chefModal.value.description,
+      isActive: this.chefModal.value.isActive,
     };
     this.apiService.editChef(this.selectedChef, body).subscribe((res) => {
       this.toastService.success('Chef details changed successfully!');

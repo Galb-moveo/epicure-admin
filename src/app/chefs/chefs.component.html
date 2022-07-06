@@ -1,13 +1,15 @@
-  <div class="chef__top">
-    <h1 class="chef__title">Chefs</h1>
-    <button mat-button color="primary" (click)="openAddChef()"><i class="material-icons">add</i>Add Item</button>
-  </div>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-
+<div class="chef__top">
+  <h1 class="chef__title">Chefs</h1>
+  <button mat-button color="primary" (click)="openAddChef()">
+    <i class="material-icons">add</i>Add Item
+  </button>
+</div>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef style="padding: 0 15px;">Name</th>
-    <td mat-cell *matCellDef="let element" style="padding: 0 15px;">{{ element.name }}</td>
+    <th mat-header-cell *matHeaderCellDef style="padding: 0 15px">Name</th>
+    <td mat-cell *matCellDef="let element" style="padding: 0 15px">
+      {{ element.name }}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="image">
@@ -30,14 +32,18 @@
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef>Edit</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="openEditChef(element)"><i class="material-icons">edit</i></button>
+      <button mat-button (click)="openEditChef(element)">
+        <i class="material-icons">edit</i>
+      </button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef>Delete</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="openDeleteChef(element._id)"><i class="material-icons">delete_outline</i></button>
+      <button mat-button (click)="openDeleteChef(element._id)">
+        <i class="material-icons">delete_outline</i>
+      </button>
     </td>
   </ng-container>
 
@@ -45,49 +51,119 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 <div *ngIf="isAddChefOpen">
-    <app-add-modal [(isAddChefOpen)]="isAddChefOpen" (isAddChefOpenChange)="isAddChefOpen=$event"> 
-      
-      <form class="modal__form">
-        <h1>{{ title }}</h1>
-        <label>Name</label>
-        <input type="text" name="name" [(ngModel)]="name">
+  <app-add-modal
+    [(isAddChefOpen)]="isAddChefOpen"
+    (isAddChefOpenChange)="isAddChefOpen = $event"
+  >
+    <form class="modal__form" [formGroup]="chefModal">
+      <h1>{{ title }}</h1>
+      <label>Name</label>
+      <!-- <input type="text" name="name" [(ngModel)]="name" required> -->
+      <input type="text" name="name" formControlName="name" required />
+      <div
+        *ngIf="
+          chefModal.controls['name'].invalid &&
+          (chefModal.controls['name'].touched ||
+            chefModal.controls['name'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Name is required with at least 2 characters</span>
+      </div>
 
-        <label>Description</label>
-        <textarea name="description" [(ngModel)]="description"></textarea>
+      <label>Description</label>
+      <textarea name="description" formControlName="description"></textarea>
+      <div
+        *ngIf="
+          chefModal.controls['description'].invalid &&
+          (chefModal.controls['description'].touched ||
+            chefModal.controls['description'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Description is required with at least 4 characters</span>
+      </div>
 
-        <label>Image</label>
-        <input type="text" name="image" [(ngModel)]="image">
+      <label>Image</label>
+      <input type="text" name="image" formControlName="image" />
+      <div
+        *ngIf="
+          chefModal.controls['image'].invalid &&
+          (chefModal.controls['image'].touched ||
+            chefModal.controls['image'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Image is required</span>
+      </div>
+      <button
+        [disabled]="
+          chefModal.controls['name'].invalid ||
+          chefModal.controls['image'].invalid ||
+          chefModal.controls['description'].invalid
+        "
+        (click)="addChef()"
+      >
+        Submit
+      </button>
+    </form>
+  </app-add-modal>
+</div>
+<div *ngIf="isEditChefOpen">
+  <app-add-modal
+    [(isEditChefOpen)]="isEditChefOpen"
+    (isEditChefOpenChange)="isEditChefOpen = $event"
+  >
+    <form class="modal__form" [formGroup]="chefModal">
+      <h1>Edit Chef</h1>
+      <label>Name</label>
+      <input type="text" name="name" formControlName="name" />
+      <div
+      *ngIf="
+        chefModal.controls['name'].invalid &&
+        (chefModal.controls['name'].touched ||
+          chefModal.controls['name'].dirty)
+      "
+    >
+      <span style="color: red; font-size: 12px">Name is required with at least 2 characters</span>
+    </div>
 
-        <button (click)="addChef()">Submit</button>
-      </form>
-    
-    </app-add-modal>
-  </div>
-  <div *ngIf="isEditChefOpen">
-    <app-add-modal [(isEditChefOpen)]="isEditChefOpen" (isEditChefOpenChange)="isEditChefOpen=$event"> 
-      
-      <form class="modal__form" >
-        <h1>Edit Chef</h1>
-        <label>Name</label>
-        <input type="text" name="name" [(ngModel)]="name">
+      <label>Description</label>
+      <textarea name="description" formControlName="description"></textarea>
+      <div
+      *ngIf="
+        chefModal.controls['description'].invalid &&
+        (chefModal.controls['description'].touched ||
+          chefModal.controls['description'].dirty)
+      "
+    >
+      <span style="color: red; font-size: 12px">Description is required with at least 4 characters</span>
+    </div>
 
-        <label>Description</label>
-        <textarea name="description" [(ngModel)]="description"></textarea>
-
-        <label>Image</label>
-        <input type="text" name="image" [(ngModel)]="image">
-        <button (click)="editChef()">Submit</button>
-      </form>
-    
-    </app-add-modal>
-  </div>
-  <div *ngIf="isDeleteChefOpen">
-    <app-add-modal [(isEditChefOpen)]="isDeleteChefOpen" (isDeleteChefOpenChange)="isDeleteChefOpen=$event"> 
-      
-      <form class="modal__form">
-        <h1>Are you sure?</h1>       
+      <label>Image</label>
+      <input type="text" name="image" formControlName="image" />
+      <div
+      *ngIf="
+        chefModal.controls['image'].invalid &&
+        (chefModal.controls['image'].touched ||
+          chefModal.controls['image'].dirty)
+      "
+    >
+      <span style="color: red; font-size: 12px">Image is required</span>
+    </div>
+      <button         [disabled]="
+      chefModal.controls['name'].invalid ||
+      chefModal.controls['image'].invalid ||
+      chefModal.controls['description'].invalid
+    " (click)="editChef()">Submit</button>
+    </form>
+  </app-add-modal>
+</div>
+<div *ngIf="isDeleteChefOpen">
+  <app-add-modal
+    [(isEditChefOpen)]="isDeleteChefOpen"
+    (isDeleteChefOpenChange)="isDeleteChefOpen = $event"
+  >
+    <form class="modal__form">
+      <h1>Are you sure?</h1>
       <button (click)="deleteChef()">Delete</button>
-      </form>
-    
-    </app-add-modal>
-  </div>
+    </form>
+  </app-add-modal>
+</div>

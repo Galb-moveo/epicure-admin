@@ -76,29 +76,88 @@
     <form class="modal__form" [formGroup]="dishModal">
       <h1 class="modal__title">{{ title }}</h1>
       <label class="modal__lable">Name</label>
-      <input type="text" formControlName="name" placeholder="Enter Name" />
+      <input
+        type="text"
+        formControlName="name"
+        placeholder="Enter Name"
+        minlength="2"
+      />
+      <div
+        *ngIf="
+          dishModal.controls['name'].invalid &&
+          (dishModal.controls['name'].touched ||
+            dishModal.controls['name'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px"
+          >Name is required with at least 2 characters</span
+        >
+      </div>
+      <!-- <input type="text" formControlName="name" placeholder="Enter Name" minlength="5"/> -->
       <label class="modal__lable">Image</label>
       <input
         class="modal__input"
         type="text"
         id="image"
         formControlName="image"
+        placeholder="Enter image url"
       />
+      <div
+        *ngIf="
+          dishModal.controls['image'].invalid &&
+          (dishModal.controls['image'].touched ||
+            dishModal.controls['image'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Image is required</span>
+      </div>
       <label>Description</label>
       <textarea
         name="description"
         formControlName="description"
         placeholder="Enter description"
+        minlength="4"
       ></textarea>
-
+      <div
+        *ngIf="
+          dishModal.controls['description'].invalid &&
+          (dishModal.controls['description'].touched ||
+            dishModal.controls['description'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px"
+          >Description is required with at least 4 characters</span
+        >
+      </div>
       <label class="modal__lable">Restaurant</label>
       <select name="chefs" name="selectedChef" formControlName="restaurantId">
-        <option *ngFor="let rest of restaurants" [value]="rest.id">
+        <option
+          *ngFor="let rest of restaurants"
+          [value]="rest.id"
+          default="null"
+        >
           {{ rest.name }}
         </option>
       </select>
+      <div
+        *ngIf="
+          dishModal.controls['restaurantId'].invalid &&
+          (dishModal.controls['restaurantId'].touched ||
+            dishModal.controls['restaurantId'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Restaurant is required</span>
+      </div>
       <label class="modal__lable">Price</label>
       <input class="modal__input" type="number" formControlName="price" />
+      <div
+        *ngIf="
+          dishModal.controls['price'].invalid &&
+          dishModal.controls['price'].touched
+        "
+      >
+        <span style="color: red; font-size: 12px">Price is required</span>
+      </div>
       <label for="">Tags</label>
 
       <div>
@@ -109,7 +168,18 @@
         <label> vej</label>
         <input type="checkbox" name="vej" formControlName="isVej" />
       </div>
-      <button (click)="addDish()">Submit</button>
+      <button
+        [disabled]="
+          dishModal.controls['name'].invalid ||
+          dishModal.controls['image'].invalid ||
+          dishModal.controls['description'].invalid ||
+          dishModal.controls['price'].invalid ||
+          dishModal.controls['restaurantId'].invalid
+        "
+        (click)="addDish()"
+      >
+        Submit
+      </button>
     </form>
   </app-add-modal>
 </div>
@@ -128,6 +198,17 @@
         placeholder="Enter Name"
         required
       />
+      <div
+        *ngIf="
+          dishModal.controls['name'].invalid &&
+          (dishModal.controls['name'].touched ||
+            dishModal.controls['name'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px"
+          >Name is required with at least 2 characters</span
+        >
+      </div>
       <label class="modal__lable">Image</label>
       <input
         class="modal__input"
@@ -136,12 +217,32 @@
         formControlName="image"
         required
       />
+      <div
+        *ngIf="
+          dishModal.controls['image'].invalid &&
+          (dishModal.controls['image'].touched ||
+            dishModal.controls['image'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Image is required</span>
+      </div>
       <label>Description</label>
       <textarea
         name="description"
         formControlName="description"
         placeholder="Enter description"
       ></textarea>
+      <div
+        *ngIf="
+          dishModal.controls['description'].invalid &&
+          (dishModal.controls['description'].touched ||
+            dishModal.controls['description'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px"
+          >Description is required with at least 4 characters</span
+        >
+      </div>
 
       <label class="modal__lable">Restaurant</label>
       <select name="chefs" name="selectedChef" formControlName="restaurantId">
@@ -154,7 +255,15 @@
       </select>
       <label class="modal__lable">Price</label>
       <input class="modal__input" type="number" formControlName="price" />
-
+      <div
+        *ngIf="
+          dishModal.controls['price'].invalid &&
+          (dishModal.controls['price'].touched ||
+            dishModal.controls['price'].dirty)
+        "
+      >
+        <span style="color: red; font-size: 12px">Price is required</span>
+      </div>
       <div>
         <label>spicy</label>
         <input type="checkbox" formControlName="isSpicy" />
@@ -164,7 +273,19 @@
         <input type="checkbox" name="vej" formControlName="isVej" />
       </div>
 
-      <button type="submit" (click)="editDish()">Submit</button>
+      <button
+        type="submit"
+        [disabled]="
+          dishModal.controls['name'].invalid ||
+          dishModal.controls['image'].invalid ||
+          dishModal.controls['description'].invalid ||
+          dishModal.controls['price'].invalid ||
+          dishModal.controls['restaurantId'].invalid
+        "
+        (click)="editDish()"
+      >
+        Submit
+      </button>
     </form>
   </app-add-modal>
 </div>
