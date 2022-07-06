@@ -188,7 +188,6 @@
       <select [value]="restaurantModal.value.Chef" formControlName="Chef">
         <option *ngFor="let chef of chefs">{{ chef.name }}</option>
       </select>
-
       <label class="modal__lable">signatureDish</label>
       <select name="SignatureDish" formControlName="SignatureDish">
         <option *ngFor="let dish of dishes">{{ dish.name }}</option>
